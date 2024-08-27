@@ -1,0 +1,30 @@
+<!DOCTYPE html>  
+<html lang="en">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>开往 巡查任务查询器</title>  
+    <link rel="stylesheet" href="styles.css">  
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>  
+<body>  
+    <div class="container">  
+        <h1>开往 巡查任务查询器</h1>  
+        <form id="taskForm">  
+            <label for="totalTasks">页面总量:</label>  
+            <input type="number" id="totalTasks" placeholder="请输入页面总量" min="1" required>  
+            <label for="groupNumber">组别:</label>  
+            <select id="groupNumber">  
+                <option value="1">一组</option>  
+                <option value="2">二组</option>  
+                <option value="3">三组</option>  
+                <option value="4">四组</option>  
+            </select>  
+            <button type="button" onclick="queryTasks()">查询任务</button>  
+        </form>  
+        <p id="result" class="result"></p>  
+    </div>  
+  
+    <script src="script.js"></script>  
+</body>  
+</html>
