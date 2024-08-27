@@ -1,30 +1,125 @@
-<!DOCTYPE html>  
-<html lang="en">  
-<head>  
-    <meta charset="UTF-8">  
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    <title>开往 巡查任务查询器</title>  
-    <link rel="stylesheet" href="styles.css">  
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>开往 巡查分配查询</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-</head>  
-<body>  
-    <div class="container">  
-        <h1>开往 巡查任务查询器</h1>  
-        <form id="taskForm">  
-            <label for="totalTasks">页面总量:</label>  
-            <input type="number" id="totalTasks" placeholder="请输入页面总量" min="1" required>  
-            <label for="groupNumber">组别:</label>  
-            <select id="groupNumber">  
-                <option value="1">一组</option>  
-                <option value="2">二组</option>  
-                <option value="3">三组</option>  
-                <option value="4">四组</option>  
-            </select>  
-            <button type="button" onclick="queryTasks()">查询任务</button>  
-        </form>  
-        <p id="result" class="result"></p>  
-    </div>  
-  
-    <script src="script.js"></script>  
-</body>  
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            overflow-y: auto; /* 确保页面本身可以滚动 */
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        input, select {
+            padding: 10px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.1em;
+            color: #555;
+            max-height: 300px; /* 限制最大高度 */
+            overflow-y: auto; /* 允许结果区域滚动 */
+            display: none; /* 初始时隐藏 */
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .result.visible {
+            display: block; /* 有结果时显示 */
+        }
+        .title {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: #007BFF;
+        }
+        .task-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .task-card {
+            background-color: #e8f4f8;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 1em;
+            color: #007BFF;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="title">开往 巡查分配查询</div>
+
+    <label for="totalTasks">请输入页面总量:</label>
+    <input type="number" id="totalTasks" placeholder="页面总量 (例如: 100)" oninput="calculateTasks()">
+
+    <label for="groupNumber">请选择组别:</label>
+    <select id="groupNumber" onchange="calculateTasks()">
+        <option value="1">1组</option>
+        <option value="2">2组</option>
+        <option value="3">3组</option>
+        <option value="4">4组</option>
+    </select>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    function calculateTasks() {
+        const totalTasks = parseInt(document.getElementById("totalTasks").value);
+        const groupNumber = parseInt(document.getElementById("groupNumber").value);
+        const resultElement = document.getElementById("result");
+
+        if (isNaN(totalTasks) || totalTasks <= 0) {
+            resultElement.innerHTML = "请输入有效的页面总量！";
+            resultElement.classList.remove('visible');
+            return;
+        }
+
+        let tasksForGroup = [];
+        for (let i = 1; i <= totalTasks; i++) {
+            if ((i - groupNumber) % 4 === 0) {
+                tasksForGroup.push(i);
+            }
+        }
+
+        if (tasksForGroup.length === 0) {
+            resultElement.innerHTML = `在1到${totalTasks}范围内，${groupNumber}组没有任务。`;
+        } else {
+            let taskCards = tasksForGroup.map(task => `<div class="task-card">${task}</div>`).join("");
+            resultElement.innerHTML = `在1到${totalTasks}范围内，<strong>${groupNumber}组</strong> 负责的页面有: <div class="task-list">${taskCards}</div>`;
+        }
+
+        resultElement.classList.add('visible');
+    }
+</script>
+
+</body>
 </html>
